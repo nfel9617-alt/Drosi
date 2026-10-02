@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E1A4D">
+<title>دروسي - منصة الدروس والتمارين</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%234F3FD8'/%3E%3Cpath d='M32 24C26 20 18 20 12 22v22c6-2 14-2 20 2zM32 24c6-4 14-4 20-2v22c-6-2-14-2-20 2z' fill='%23fff'/%3E%3Cpath d='M32 6l2 5 5 1.500-5 1.500-2 5-2-5-5-1.500 5-1.500z' fill='%23FFB020'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--ink:#1E1A4D;--pri:#4F3FD8;--pri2:#7C5CFF;--mint:#12B89A;--sun:#FFB020;--bg:#F5F4FB;--card:#fff;--tx:#1B1840;--mut:#6B6990;--line:#E6E4F4;--err:#D2455A;--tint:#EEEBFF;--sh:0 8px 28px rgba(79,63,216,.10);--hero:linear-gradient(150deg,#1E1A4D 0%,#4F3FD8 62%,#7C5CFF 100%)}
+@media(prefers-color-scheme:dark){:root{--bg:#0F0D26;--card:#1A1740;--tx:#EEECFF;--mut:#9C99C4;--line:#2B2860;--tint:#252257;--sh:0 8px 28px rgba(0,0,0,.35)}}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Cairo,Tahoma,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+.app{max-width:560px;margin:auto;min-height:100vh;position:relative}
+@media(min-width:900px){.app{max-width:720px}body{background:radial-gradient(circle at 80% 0,var(--tint),var(--bg) 55%)}}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+section{display:none;padding:18px 18px 110px}section.on{display:block}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+/* brand */
+.mark{width:40px;height:40px;flex:none}.mark.big{width:104px;height:104px;filter:drop-shadow(0 14px 24px rgba(0,0,0,.35))}
+.wm{font-weight:800;font-size:22px;letter-spacing:-.3px}
+#hdr{display:none;align-items:center;gap:10px;padding:12px 18px;position:sticky;top:0;z-index:5;background:var(--bg);backdrop-filter:blur(10px)}
+#hdr .wm{flex:1;color:var(--pri)}@media(prefers-color-scheme:dark){#hdr .wm{color:#fff}}
+.ib{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--tx);display:grid;place-items:center;cursor:pointer}
+/* splash */
+#splash{min-height:100vh;background:var(--hero);color:#fff;text-align:center;padding:0;overflow:hidden;position:relative}
+#splash.on{display:flex;flex-direction:column;align-items:center;justify-content:center}
+#splash:before,#splash:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.07)}
+#splash:before{width:340px;height:340px;top:-120px;left:-110px}#splash:after{width:260px;height:260px;bottom:-90px;right:-80px;background:rgba(255,176,32,.14)}
+#splash>*{position:relative;z-index:1}
+#splash h1{font-size:54px;font-weight:800;margin-top:20px}
+#splash p{opacity:.85;max-width:300px;line-height:1.8;margin:6px 0 34px}
+.pills{display:flex;gap:8px;margin-top:26px;flex-wrap:wrap;justify-content:center}.pills span{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);padding:6px 12px;border-radius:99px;font-size:13px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:0;border-radius:16px;font:700 16px Cairo;cursor:pointer;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;box-shadow:0 8px 20px rgba(79,63,216,.3);transition:transform .12s}
+.btn:active{transform:scale(.97)}.btn.sun{background:var(--sun);color:var(--ink);box-shadow:0 8px 20px rgba(255,176,32,.35)}.btn.mint{background:linear-gradient(135deg,#0E9F86,var(--mint));box-shadow:0 8px 20px rgba(18,184,154,.3)}
+.btn.ghost{background:var(--card);color:var(--pri);border:1.5px solid var(--line);box-shadow:none}.btn.sm{width:auto;padding:9px 14px;font-size:14px;border-radius:12px}
+#splash .btn{width:230px}
+/* typography */
+h2{font-size:24px;font-weight:800;line-height:1.3}p.sub{color:var(--mut);font-size:14px;margin:4px 0 18px}
+h3{font-size:17px;font-weight:800}.hd{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px}
+/* role cards */
+.role{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px;cursor:pointer;width:100%;font:inherit;text-align:right;color:inherit;box-shadow:var(--sh)}
+.role:hover{border-color:var(--pri2)}
+.role .ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--pri),var(--pri2))}.role.s .ic{background:linear-gradient(135deg,#0E9F86,var(--mint))}
+.role .ic svg{width:30px;height:30px}.role b{font-size:19px;display:block}.role span{color:var(--mut);font-size:13px}.role>svg{margin-right:auto;color:var(--mut)}
+/* forms */
+.seg{display:flex;background:var(--tint);border-radius:16px;padding:4px;margin-bottom:16px}
+.seg button{flex:1;border:0;background:none;padding:11px;border-radius:12px;font:700 15px Cairo;color:var(--mut);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--pri);box-shadow:0 2px 8px rgba(79,63,216,.15)}
+.welcome{display:flex;gap:12px;align-items:center;background:var(--hero);color:#fff;border-radius:20px;padding:16px 18px;margin-bottom:16px;font-weight:700}
+.welcome svg{color:var(--sun);width:28px;height:28px}
+label{display:block;font-size:13px;font-weight:700;margin:13px 0 6px}label small{color:var(--mut);font-weight:400}
+.f{position:relative}.f svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--mut);width:18px;height:18px}
+input,select{width:100%;padding:13px 42px 13px 12px;border:1.5px solid var(--line);border-radius:14px;font:16px Cairo;background:var(--card);color:var(--tx)}
+input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-color:var(--pri2);outline:0;box-shadow:0 0 0 4px var(--tint)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form .btn{margin-top:22px}
+/* cards */
+.card{background:var(--card);border-radius:22px;padding:16px;border:1px solid var(--line);box-shadow:var(--sh)}
+.hero{background:var(--hero);color:#fff;border-radius:26px;padding:20px;position:relative;overflow:hidden;margin-bottom:14px}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,176,32,.16);left:-50px;bottom:-70px}
+.hero>*{position:relative;z-index:1}.hero.t{background:linear-gradient(150deg,#0B6E67,#12B89A)}
+.who{display:flex;gap:14px;align-items:center}
+.av{width:58px;height:58px;border-radius:20px;background:var(--sun);color:var(--ink);display:grid;place-items:center;overflow:hidden;flex:none;font-weight:800;font-size:24px}.av img{width:100%;height:100%;object-fit:cover}
+.who b{font-size:18px;display:block}.who span{opacity:.85;font-size:13px}
+.big{display:flex;align-items:baseline;gap:8px;margin-top:16px}.big strong{font-size:46px;font-weight:800;line-height:1}.big span{opacity:.9}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;text-align:center}
+.st svg{color:var(--pri);margin-bottom:2px}.st b{display:block;font-size:22px;font-weight:800}.st span{font-size:12px;color:var(--mut)}
+.chart{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:12px}
+.chart div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--mut);gap:4px}
+.chart i{width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--pri2),var(--pri));min-height:4px}.chart div.now i{background:linear-gradient(180deg,#FFD070,var(--sun))}
+.share{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.share .btn{flex:1;min-width:110px}
+.link{direction:ltr;text-align:left;background:var(--tint);border-radius:12px;padding:10px 12px;font-size:13px;word-break:break-all;color:var(--pri)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px dashed var(--sun);color:var(--sun);padding:3px 11px;border-radius:99px;margin-top:8px;font:700 13px Cairo;cursor:pointer}
+.chip svg{width:14px;height:14px}
+/* lists */
+.sb{position:relative;margin-bottom:10px}
+.chips{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto}.chips button{border:1.5px solid var(--line);background:var(--card);color:var(--mut);padding:7px 15px;border-radius:99px;font:700 13px Cairo;cursor:pointer;white-space:nowrap}
+.chips button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.ls{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px;margin-bottom:10px;box-shadow:var(--sh)}
+.ls .ic{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--pri),var(--pri2));flex:none}.ls.ex .ic{background:linear-gradient(135deg,#FF9F1C,var(--sun));color:var(--ink)}
+.ls .tx{flex:1;min-width:0}.ls b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ls span{font-size:12px;color:var(--mut);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ls span em{display:inline-flex;gap:3px;align-items:center;font-style:normal}.ls span svg{width:13px;height:13px}
+.new{background:var(--mint);color:#fff;font-size:11px;padding:1px 8px;border-radius:99px;font-weight:700}
+.go{border:0;background:none;color:var(--mut);width:38px;height:38px;border-radius:12px;display:grid;place-items:center;cursor:pointer}.go:hover{background:var(--tint);color:var(--pri)}.go.d:hover{color:var(--err)}
+.ls.click{cursor:pointer}.empty{text-align:center;color:var(--mut);padding:30px 14px;border:2px dashed var(--line);border-radius:20px;line-height:1.8}
+.sd{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.sd .a{width:40px;height:40px;border-radius:14px;background:var(--tint);color:var(--pri);display:grid;place-items:center;font-weight:800}
+.sd div:nth-child(2){flex:1}.sd b{display:block;font-size:15px}.sd span{font-size:12px;color:var(--mut)}.sd em{font-style:normal;background:var(--tint);color:var(--pri);padding:2px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.bar2{height:8px;border-radius:9px;background:var(--tint);margin-top:5px;overflow:hidden}.bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--pri2));border-radius:9px}
+/* nav */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:none;justify-content:space-around;background:var(--card);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:6}
+@media(min-width:900px){.nav{max-width:720px}}
+.nav.on{display:flex}.nav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--mut);font:700 11px Cairo;cursor:pointer;padding:4px}
+.nav button i{display:grid;place-items:center;width:52px;height:30px;border-radius:99px;transition:background .2s}.nav button.on{color:var(--pri)}.nav button.on i{background:var(--tint)}
+.fab{position:fixed;left:max(18px,calc(50% - 262px));bottom:86px;height:54px;padding:0 20px;border-radius:18px;border:0;background:linear-gradient(135deg,#FF9F1C,var(--sun));color:var(--ink);font:800 15px Cairo;display:none;align-items:center;gap:8px;box-shadow:0 12px 26px rgba(255,176,32,.45);cursor:pointer;z-index:6}
+.fab.on{display:flex}
+/* sheets */
+.ov{position:fixed;inset:0;background:rgba(15,13,38,.55);display:none;z-index:10;align-items:flex-end;justify-content:center}.ov.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:28px 28px 0 0;padding:10px 18px 28px;animation:up .25s ease-out}
+.sheet:before{content:"";display:block;width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 12px}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.th{width:68px;height:68px;border-radius:14px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.th img{width:100%;height:100%;object-fit:cover}.th button{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;border:0;background:var(--err);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}.th svg{width:12px;height:12px}
+.qr{display:grid;place-items:center;padding:16px;background:#fff;border-radius:20px;margin:14px auto;width:fit-content}
+/* viewer */
+.vw img{width:100%;display:block;border-radius:16px;margin-bottom:12px;border:1px solid var(--line);background:#fff;min-height:140px;cursor:zoom-in}
+#zoom{position:fixed;inset:0;background:#000d;display:none;z-index:12;overflow:auto;touch-action:pinch-zoom pan-x pan-y}#zoom.on{display:block}#zoom img{width:100%;display:block;margin:auto}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:14px;font-size:14px;z-index:20;display:none;max-width:90%;box-shadow:var(--sh)}.toast.err{background:var(--err)}.toast.on{display:block}
+.ld{position:fixed;inset:0;background:rgba(245,244,251,.6);display:none;place-items:center;z-index:15}.ld.on{display:grid}
+.ld i{width:46px;height:46px;border:5px solid var(--line);border-top-color:var(--pri2);border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.tab{display:none}.tab.on{display:block}
+#vprint{display:none}@media print{body>*,.app{display:none!important}#vprint{display:block!important}#vprint img{width:100%;page-break-inside:avoid;margin-bottom:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C5CFF"/><stop offset="1" stop-color="#3A2BB8"/></linearGradient>
+<symbol id="logo" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="url(#g)"/><path d="M32 24C26 20 18 20 12 22v22c6-2 14-2 20 2z" fill="#fff"/><path d="M32 24c6-4 14-4 20-2v22c-6-2-14-2-20 2z" fill="#fff" opacity=".82"/><path d="M32 6l2 5 5 1.500-5 1.500-2 5-2-5-5-1.500 5-1.500z" fill="#FFB020"/><path d="M18 28c4-1 8-1 11 .5M18 33c4-1 8-1 11 .5M35 28.500c3-1.500 7-1.500 11-.500M35 33.500c3-1.500 7-1.500 11-.500" stroke="#7C5CFF" stroke-width="1.600" stroke-linecap="round" fill="none"/></symbol>
+<symbol id="home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></symbol>
+<symbol id="book" viewBox="0 0 24 24"><path d="M4 5.500A2.500 2.500 0 0 1 6.500 3H20v16H6.500A2.500 2.500 0 0 0 4 21.500z"/><path d="M4 21.500V5.500M9 8h7M9 12h5"/></symbol>
+<symbol id="list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.500"/><path d="M2.500 20c0-3.500 3-5.500 6.500-5.500s6.500 2 6.500 5.500M16 4.500a3.500 3.500 0 0 1 0 7M18 14.500c2.500.5 3.500 2.500 3.500 5.500"/></symbol>
+<symbol id="chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol>
+<symbol id="teacher" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M7 9h6M7 12h4"/></symbol>
+<symbol id="cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.500V16c0 1.500 3 3 6 3s6-1.500 6-3v-4.500M22 9v6"/></symbol>
+<symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.500-6 8-6s8 2 8 6"/></symbol>
+<symbol id="mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.500 1.500a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+<symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></symbol>
+<symbol id="sub" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M7 11v5c0 1.500 2.500 3 5 3s5-1.500 5-3v-5"/></symbol>
+<symbol id="cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="up" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+<symbol id="edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+<symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+<symbol id="print" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-7h16v7h-3"/><rect x="7" y="14" width="10" height="7"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+<symbol id="out" viewBox="0 0 24 24"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+<symbol id="link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.700 0l3-3a4 4 0 0 0-5.700-5.700l-1 1M14 10a4 4 0 0 0-5.700 0l-3 3a4 4 0 0 0 5.700 5.700l1-1"/></symbol>
+<symbol id="qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></symbol>
+<symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.500-4.500"/></symbol>
+<symbol id="eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></symbol>
+<symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="spark" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></symbol>
+<symbol id="print2" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H3v-8h18v8h-3M7 14h10v7H7z"/></symbol>
+</defs></svg>
+
+<div class="app">
+<section id="splash" class="on">
+  <svg class="mark big"><use href="#logo"/></svg>
+  <h1>دروسي</h1>
+  <p>منصة تجمع دروس أستاذك وسلاسل تمارينه في مكان واحد، تقرأها وتطبعها متى شئت</p>
+  <button class="btn sun" onclick="go('role')">ادخل</button>
+  <div class="pills"><span><svg class="i"><use href="#print2"/></svg>بلا طباعة ورقية</span><span><svg class="i"><use href="#link"/></svg>دخول برابط</span><span><svg class="i"><use href="#chart"/></svg>إحصائيات للأستاذ</span></div>
+</section>
+
+<header id="hdr"><svg class="mark"><use href="#logo"/></svg><span class="wm">دروسي</span>
+  <button class="ib" id="hb" onclick="back()" aria-label="رجوع"><svg class="i"><use href="#back"/></svg></button></header>
+
+<section id="role">
+  <h2>من أنت؟</h2><p class="sub">اختر فضاءك للمتابعة</p>
+  <button class="role" onclick="go('tauth')"><div class="ic"><svg class="i"><use href="#teacher"/></svg></div><div><b>أستاذ</b><span>ارفع الدروس وتابع من دخل لفضائك</span></div><svg class="i"><use href="#back"/></svg></button>
+  <button class="role s" onclick="go('scode')"><div class="ic"><svg class="i"><use href="#cap"/></svg></div><div><b>تلميذ</b><span>ادخل بكود أستاذك أو برابطه</span></div><svg class="i"><use href="#back"/></svg></button>
+</section>
+
+<section id="tauth">
+  <div class="welcome"><svg class="i"><use href="#spark"/></svg>مرحبا بك في خدمة تسهل عملك</div>
+  <div class="seg"><button id="tl" class="on" onclick="tab('l')">تسجيل الدخول</button><button id="tr" onclick="tab('r')">فتح حساب</button></div>
+  <div id="fl" class="form">
+    <label>البريد الإلكتروني</label><div class="f"><svg class="i"><use href="#mail"/></svg><input id="le" type="email" autocomplete="email"></div>
+    <label>كلمة المرور</label><div class="f"><svg class="i"><use href="#lock"/></svg><input id="lp" type="password" autocomplete="current-password"></div>
+    <button class="btn" onclick="login()"><svg class="i"><use href="#out"/></svg>دخول</button>
+  </div>
+  <div id="fr" class="form" style="display:none">
+    <div class="row"><div><label>الاسم</label><div class="f"><svg class="i"><use href="#user"/></svg><input id="rn"></div></div>
+    <div><label>اللقب</label><div class="f"><svg class="i"><use href="#user"/></svg><input id="rs"></div></div></div>
+    <label>رقم الهاتف</label><div class="f"><svg class="i"><use href="#phone"/></svg><input id="rph" type="tel" inputmode="tel"></div>
+    <label>المادة</label><div class="f"><svg class="i"><use href="#sub"/></svg><input id="rsub" placeholder="مثال: الرياضيات"></div>
+    <label>السنة الدراسية</label><div class="f"><svg class="i"><use href="#cal"/></svg><select id="ry"></select></div>
+    <label>البريد الإلكتروني</label><div class="f"><svg class="i"><use href="#mail"/></svg><input id="re" type="email"></div>
+    <label>كلمة المرور</label><div class="f"><svg class="i"><use href="#lock"/></svg><input id="rp" type="password" autocomplete="new-password"></div>
+    <label>كود الطالب <small>(تختاره أنت ويدخل به تلاميذك)</small></label><div class="f"><svg class="i"><use href="#key"/></svg><input id="rc" dir="ltr" style="text-align:right"></div>
+    <label>صورتك <small>(اختياري)</small></label><input id="rf" type="file" accept="image/*">
+    <button class="btn" onclick="register()"><svg class="i"><use href="#user"/></svg>فتح الحساب</button>
+  </div>
+</section>
+
+<section id="scode">
+  <h2>فضاء الطالب</h2><p class="sub">أدخل الكود الذي سلمه لك الأستاذ</p>
+  <label>كود الأستاذ</label><div class="f"><svg class="i"><use href="#key"/></svg><input id="sc" dir="ltr" style="text-align:right"></div>
+  <label>اسمك <small>(اختياري، ليتعرف عليك أستاذك)</small></label><div class="f"><svg class="i"><use href="#user"/></svg><input id="sn"></div>
+  <button class="btn mint" style="margin-top:22px" onclick="studentOpen()"><svg class="i"><use href="#out"/></svg>دخول</button>
+  <div id="fol"></div>
+</section>
+
+<section id="shome">
+  <div class="hero t"><div class="who"><div class="av" id="sav"></div><div><b id="snm"></b><span id="ssb"></span></div></div></div>
+  <div class="sb f"><svg class="i"><use href="#search"/></svg><input id="sq" placeholder="ابحث عن درس أو سلسلة" oninput="renderS()"></div>
+  <div class="chips" data-m="s"><button class="on" data-f="">الكل</button><button data-f="درس">دروس</button><button data-f="سلسلة تمارين">سلاسل التمارين</button></div>
+  <div id="sl"></div>
+</section>
+
+<section id="view" class="vw">
+  <h2 id="vt"></h2><p class="sub" id="vs"></p>
+  <button class="btn" style="margin-bottom:14px" onclick="window.print()"><svg class="i"><use href="#print"/></svg>طباعة</button>
+  <div id="vi"></div>
+</section>
+
+<section id="thome">
+  <div class="tab on" id="p0">
+    <div class="hero"><div class="who"><div class="av" id="tav"></div><div><b id="tnm"></b><span id="tsb"></span></div></div>
+      <div class="big"><strong id="nst">0</strong><span>طالب دخلوا لفضائك</span></div></div>
+    <div class="stats">
+      <div class="st"><svg class="i"><use href="#eye"/></svg><b id="nvi">0</b><span>إجمالي الدخول</span></div>
+      <div class="st"><svg class="i"><use href="#link"/></svg><b id="nlk">0</b><span>عبر الرابط</span></div>
+      <div class="st"><svg class="i"><use href="#clock"/></svg><b id="ntd">0</b><span>اليوم</span></div></div>
+    <div class="card"><h3>الدخول خلال 7 أيام</h3><div class="chart" id="ch"></div></div>
+    <div class="hd"><h3>شارك فضاءك مع تلاميذك</h3></div>
+    <div class="card"><div class="link" id="lnk"></div>
+      <div class="share"><button class="btn sm ghost" onclick="copyLink()"><svg class="i"><use href="#copy"/></svg>نسخ الرابط</button>
+      <button class="btn sm mint" onclick="wa()"><svg class="i"><use href="#share"/></svg>مشاركة</button>
+      <button class="btn sm ghost" onclick="qrOpen()"><svg class="i"><use href="#qr"/></svg>رمز QR</button></div></div>
+    <div class="hd"><h3>الأكثر مشاهدة</h3></div><div id="top"></div>
+  </div>
+  <div class="tab" id="p1">
+    <h2>محتواي</h2><p class="sub">دروسك وسلاسل تمارينك</p>
+    <div class="sb f"><svg class="i"><use href="#search"/></svg><input id="tq" placeholder="ابحث في محتواك" oninput="renderT()"></div>
+    <div class="chips" data-m="t"><button class="on" data-f="">الكل</button><button data-f="درس">دروس</button><button data-f="سلسلة تمارين">سلاسل التمارين</button></div>
+    <div id="tl2"></div>
+  </div>
+  <div class="tab" id="p2"><h2>طلبتي</h2><p class="sub">من دخل لفضائك ومتى</p><div class="card" id="stl" style="padding:6px 16px"></div></div>
+  <div class="tab" id="p3">
+    <h2>حسابي</h2><p class="sub">معلوماتك وكود الطالب</p>
+    <div class="card" id="acc"></div>
+    <button class="btn ghost" style="margin-top:14px" onclick="logout()"><svg class="i"><use href="#out"/></svg>تسجيل الخروج</button>
+  </div>
+</section>
+</div>
+
+<nav class="nav" id="nav">
+  <button class="on" onclick="tabT(0)"><i><svg class="i"><use href="#home"/></svg></i>الرئيسية</button>
+  <button onclick="tabT(1)"><i><svg class="i"><use href="#book"/></svg></i>محتواي</button>
+  <button onclick="tabT(2)"><i><svg class="i"><use href="#users"/></svg></i>طلبتي</button>
+  <button onclick="tabT(3)"><i><svg class="i"><use href="#user"/></svg></i>حسابي</button>
+</nav>
+<button class="fab" id="fab" onclick="openEd()"><svg class="i"><use href="#plus"/></svg>إضافة</button>
+
+<div class="ov" id="ed" onclick="if(event.target===this)closeEd()"><div class="sheet">
+  <h2 id="ftt" style="font-size:20px">رفع جديد</h2>
+  <label>العنوان</label><div class="f"><svg class="i"><use href="#book"/></svg><input id="lt"></div>
+  <label>نوع المحتوى</label><div class="f"><svg class="i"><use href="#list"/></svg><select id="ltp"><option>درس</option><option>سلسلة تمارين</option></select></div>
+  <label>صور المحتوى</label><input id="li" type="file" accept="image/*" multiple onchange="pick(this)">
+  <div class="thumbs" id="tb"></div>
+  <button class="btn" style="margin-top:20px" onclick="saveLesson()"><svg class="i"><use href="#up"/></svg><span id="svt">رفع</span></button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeEd()">إلغاء</button>
+</div></div>
+<div class="ov" id="qm" onclick="this.classList.remove('on')"><div class="sheet" style="text-align:center"><h2 style="font-size:20px">امسح للدخول لفضائي</h2><div class="qr" id="qrb"></div><p class="sub">اعرض الرمز على السبورة ليدخل التلاميذ مباشرة</p></div></div>
+<div id="zoom" onclick="this.classList.remove('on')"><img id="zi" alt=""></div>
+<div id="vprint"></div>
+<div class="ld" id="ld"><i></i></div><div class="toast" id="ts"></div>
+
+<script>
+/* ضع هنا رابط تطبيق الويب بعد نشر Code.gs */
+const API_URL = "https://script.google.com/macros/s/AKfycbxjGWWN4xoazTHxjKo7v3guSSNWf10eaToW6UGFil0ciKTFvh2LeNkE6adR5RyKTbVe/exec";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ico = n => `<svg class="i"><use href="#${n}"/></svg>`;
+const img = (id, w = 1400) => `https://drive.google.com/thumbnail?id=${id}&sz=w${w}`;
+const ls = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+const YEARS = ['1 متوسط','2 متوسط','3 متوسط','4 متوسط','1 ثانوي','2 ثانوي','3 ثانوي','جامعي'];
+$('ry').innerHTML = YEARS.map(y => `<option>${y}</option>`).join('');
+const DID = localStorage.getItem('did') || (localStorage.setItem('did', Math.random().toString(36).slice(2) + Date.now().toString(36)), localStorage.getItem('did'));
+const S = { tok: localStorage.getItem('tok'), lessons: [], keep: [], fresh: [], editId: null, stack: [], f: { t: '', s: '' }, st: null, code: '', via: '' };
+
+/* ---------- التنقل ---------- */
+function show(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
+  const t = id === 'thome';
+  $('hdr').style.display = id === 'splash' ? 'none' : 'flex';
+  $('hb').style.visibility = ['role', 'thome'].includes(id) ? 'hidden' : 'visible';
+  $('nav').classList.toggle('on', t); $('fab').classList.toggle('on', t);
+  window.scrollTo(0, 0);
+}
+function go(id) { S.stack.push(document.querySelector('section.on').id); show(id); }
+function back() { show(S.stack.pop() || 'role'); }
+function toast(m, err) { const t = $('ts'); t.textContent = m; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(t._t); t._t = setTimeout(() => t.className = 'toast', 3200); }
+async function api(action, data = {}, quiet) {
+  if (!quiet) $('ld').classList.add('on');
+  try {
+    if (API_URL.startsWith('PASTE')) throw new Error('ضع رابط التطبيق في API_URL أولا');
+    const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, token: S.tok, deviceId: DID, ...data }) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error);
+    return j.data;
+  } catch (e) { if (!quiet) toast(e.message === 'Failed to fetch' ? 'تعذر الاتصال بالخادم' : e.message, true); throw e; }
+  finally { $('ld').classList.remove('on'); }
+}
+const ago = t => { const m = Math.max(0, (Date.now() - t) / 6e4); return m < 1 ? 'الآن' : m < 60 ? `منذ ${Math.floor(m)} د` : m < 1440 ? `منذ ${Math.floor(m / 60)} سا` : `منذ ${Math.floor(m / 1440)} يوم`; };
+document.addEventListener('click', e => {
+  const b = e.target.closest('.chips button'); if (!b) return;
+  const m = b.parentNode.dataset.m; S.f[m] = b.dataset.f;
+  b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); m === 't' ? renderT() : renderS();
+});
+const filt = (m, q) => S.lessons.filter(l => (!S.f[m] || l.type === S.f[m]) && l.title.includes(q.trim()));
+
+/* ---------- حساب الأستاذ ---------- */
+function tab(t) {
+  $('fl').style.display = t === 'l' ? '' : 'none'; $('fr').style.display = t === 'r' ? '' : 'none';
+  $('tl').classList.toggle('on', t === 'l'); $('tr').classList.toggle('on', t === 'r');
+}
+function shrink(file, max = 1400, q = .8) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => { const im = new Image(); im.onload = () => {
+      const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas');
+      c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+      res(c.toDataURL('image/jpeg', q)); }; im.onerror = rej; im.src = fr.result; };
+    fr.onerror = rej; fr.readAsDataURL(file);
+  });
+}
+async function register() {
+  const v = id => $(id).value.trim();
+  const d = { name: v('rn'), surname: v('rs'), phone: v('rph'), subject: v('rsub'), year: $('ry').value, email: v('re'), pass: $('rp').value, code: v('rc') };
+  if (Object.values(d).some(x => !x)) return toast('يرجى ملء جميع الحقول الإجبارية', true);
+  if ($('rf').files[0]) d.photo = await shrink($('rf').files[0], 400, .8);
+  const r = await api('register', d); S.tok = r.token; localStorage.setItem('tok', S.tok); await loadMe(); toast('تم فتح الحساب');
+}
+async function login() {
+  const r = await api('login', { email: $('le').value, pass: $('lp').value });
+  S.tok = r.token; localStorage.setItem('tok', S.tok); await loadMe();
+}
+async function loadMe() {
+  const r = await api('me'); S.me = r.teacher; S.lessons = r.lessons; S.stack = ['role'];
+  renderTeacher(); show('thome'); tabT(0); loadStats();
+}
+function logout() { localStorage.removeItem('tok'); S.tok = null; S.stack = []; show('role'); }
+function avatar(el, t) { el.innerHTML = t.photo ? `<img src="${img(t.photo, 200)}" alt="">` : esc((t.name || '?')[0]); }
+const link = () => location.origin + location.pathname + '?c=' + encodeURIComponent(S.me.code);
+function copyLink() { navigator.clipboard?.writeText(link()).then(() => toast('تم نسخ الرابط')); }
+function copyCode() { navigator.clipboard?.writeText(S.me.code).then(() => toast('تم نسخ الكود')); }
+function wa() { open('https://wa.me/?text=' + encodeURIComponent(`مرحبا، هذا رابط دروس ${S.me.subject} على منصة دروسي:\n${link()}\nأو ادخل بالكود: ${S.me.code}`)); }
+function qrOpen() {
+  $('qrb').innerHTML = ''; $('qm').classList.add('on');
+  if (window.QRCode) new QRCode($('qrb'), { text: link(), width: 200, height: 200, colorDark: '#1E1A4D' }); else $('qrb').textContent = link();
+}
+function tabT(n) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('on', i === n));
+  document.querySelectorAll('#nav button').forEach((b, i) => b.classList.toggle('on', i === n));
+  $('fab').style.display = n === 1 || n === 0 ? '' : 'none'; if (n === 0 || n === 2) loadStats(); window.scrollTo(0, 0);
+}
+
+/* ---------- لوحة الأستاذ ---------- */
+function renderTeacher() {
+  const m = S.me; avatar($('tav'), m); $('tnm').textContent = `مرحبا أ. ${m.name} ${m.surname}`; $('tsb').textContent = `${m.subject} - ${m.year}`;
+  $('lnk').textContent = link();
+  $('acc').innerHTML = [['user', `${m.name} ${m.surname}`], ['sub', m.subject], ['cal', m.year], ['mail', m.email], ['phone', m.phone]]
+    .map(([i, t]) => `<div class="sd"><div class="a">${ico(i)}</div><div><b>${esc(t)}</b></div></div>`).join('')
+    + `<div class="sd"><div class="a">${ico('key')}</div><div><b dir="ltr" style="text-align:right">${esc(m.code)}</b><span>كود الطالب</span></div><button class="go" onclick="copyCode()" aria-label="نسخ">${ico('copy')}</button></div>`;
+  renderT();
+}
+async function loadStats() {
+  try { S.st = await api('stats', {}, true); } catch (e) { return; }
+  const s = S.st; $('nst').textContent = s.students; $('nvi').textContent = s.visits; $('nlk').textContent = s.viaLink; $('ntd').textContent = s.today;
+  const mx = Math.max(1, ...s.week);
+  $('ch').innerHTML = s.week.map((n, i) => `<div class="${i === 6 ? 'now' : ''}"><b style="font-size:12px;color:var(--tx)">${n}</b><i style="height:${Math.max(4, n / mx * 80)}px"></i>${new Date(Date.now() - (6 - i) * 864e5).toLocaleDateString('ar-DZ', { weekday: 'short' })}</div>`).join('');
+  $('stl').innerHTML = s.recent.length ? s.recent.map(r => `<div class="sd"><div class="a">${esc((r.name || 'ط')[0])}</div><div><b>${esc(r.name || 'طالب #' + r.id)}</b><span>آخر دخول ${ago(r.last)}</span></div><em>${r.visits} مرة</em></div>`).join('')
+    : '<div class="empty">لم يدخل أي طالب بعد. شارك الرابط أو الكود مع تلاميذك.</div>';
+  const top = S.lessons.map(l => ({ ...l, v: s.views[l.id] || 0 })).sort((a, b) => b.v - a.v).slice(0, 3), t0 = Math.max(1, top[0]?.v || 1);
+  $('top').innerHTML = top.some(x => x.v) ? top.filter(x => x.v).map(x => `<div class="card" style="margin-bottom:10px;padding:12px"><div style="display:flex;justify-content:space-between"><b>${esc(x.title)}</b><span style="color:var(--mut);font-size:13px">${x.v} مشاهدة</span></div><div class="bar2"><i style="width:${x.v / t0 * 100}%"></i></div></div>`).join('')
+    : '<div class="empty">ستظهر هنا دروسك الأكثر مشاهدة.</div>';
+  renderT();
+}
+function renderT() {
+  const L = filt('t', $('tq').value), V = S.st?.views || {};
+  $('tl2').innerHTML = L.length ? L.map(l => `
+    <div class="ls ${l.type === 'درس' ? '' : 'ex'}"><div class="ic">${ico(l.type === 'درس' ? 'book' : 'list')}</div>
+    <div class="tx"><b>${esc(l.title)}</b><span>${esc(l.type)}<em>${ico('img')}${l.images.length}</em><em>${ico('eye')}${V[l.id] || 0}</em></span></div>
+    <button class="go" onclick="editLesson('${l.id}')" aria-label="تعديل">${ico('edit')}</button>
+    <button class="go d" onclick="delLesson('${l.id}')" aria-label="حذف">${ico('trash')}</button></div>`).join('')
+    : `<div class="empty">${S.lessons.length ? 'لا نتائج مطابقة.' : 'لم ترفع أي محتوى بعد. اضغط زر الإضافة للبدء.'}</div>`;
+}
+function drawThumbs() {
+  const b = (cls, src, arr, i) => `<div class="th"><img src="${src}" alt=""><button onclick="S.${arr}.splice(${i},1);drawThumbs()" aria-label="حذف الصورة">${ico('x')}</button></div>`;
+  $('tb').innerHTML = S.keep.map((id, i) => b('', img(id, 200), 'keep', i)).join('') + S.fresh.map((x, i) => b('', x, 'fresh', i)).join('');
+}
+async function pick(inp) { for (const f of inp.files) S.fresh.push(await shrink(f)); inp.value = ''; drawThumbs(); }
+function openEd(id) {
+  const l = id && S.lessons.find(x => x.id === id);
+  S.editId = id || null; S.keep = l ? [...l.images] : []; S.fresh = [];
+  $('lt').value = l ? l.title : ''; $('ltp').value = l ? l.type : 'درس';
+  $('ftt').textContent = l ? 'تعديل المحتوى' : 'رفع جديد'; $('svt').textContent = l ? 'حفظ التعديلات' : 'رفع';
+  drawThumbs(); $('ed').classList.add('on');
+}
+const editLesson = openEd, closeEd = () => $('ed').classList.remove('on');
+async function saveLesson() {
+  if (!$('lt').value.trim()) return toast('عنوان الدرس مطلوب', true);
+  if (!S.keep.length && !S.fresh.length) return toast('أضف صورة واحدة على الأقل', true);
+  const edit = !!S.editId;
+  S.lessons = await api('saveLesson', { id: S.editId, title: $('lt').value, type: $('ltp').value, keep: S.keep, newImages: S.fresh });
+  closeEd(); renderT(); loadStats(); toast(edit ? 'تم حفظ التعديلات' : 'تم الرفع');
+}
+async function delLesson(id) {
+  if (!confirm('حذف هذا المحتوى نهائيا؟')) return;
+  S.lessons = await api('deleteLesson', { id }); renderT(); toast('تم الحذف');
+}
+
+/* ---------- الطالب ---------- */
+function renderFol() {
+  const f = ls('follow', []);
+  $('fol').innerHTML = f.length ? `<div class="hd"><h3>أساتذتي</h3></div>` + f.map(t => `<div class="ls click ex" tabindex="0" onclick="$('sc').value='${esc(t.code)}';studentOpen()"><div class="ic">${ico('teacher')}</div><div class="tx"><b>${esc(t.name)}</b><span>${esc(t.subject)} - ${esc(t.year)}</span></div>${ico('back')}</div>`).join('') : '';
+}
+async function studentOpen() {
+  const code = $('sc').value.trim(); if (!code) return toast('أدخل الكود', true);
+  const name = $('sn').value.trim(); localStorage.setItem('sname', name);
+  const r = await api('studentOpen', { code, name, via: S.via }); S.via = ''; S.code = code; S.f.s = '';
+  S.lessons = r.lessons; S.t = r.teacher;
+  const f = ls('follow', []).filter(x => x.code !== code); f.unshift({ code, name: `أ. ${r.teacher.name} ${r.teacher.surname}`, subject: r.teacher.subject, year: r.teacher.year });
+  localStorage.setItem('follow', JSON.stringify(f.slice(0, 8)));
+  avatar($('sav'), r.teacher); $('snm').textContent = `الأستاذ ${r.teacher.name} ${r.teacher.surname}`; $('ssb').textContent = `${r.teacher.subject} - ${r.teacher.year}`;
+  $('sq').value = ''; document.querySelectorAll('[data-m=s] button').forEach((b, i) => b.classList.toggle('on', !i));
+  renderS(); go('shome');
+}
+function renderS() {
+  const L = filt('s', $('sq').value), now = Date.now();
+  $('sl').innerHTML = L.length ? L.map(l => `
+    <div class="ls click ${l.type === 'درس' ? '' : 'ex'}" tabindex="0" onclick="openLesson('${l.id}')">
+    <div class="ic">${ico(l.type === 'درس' ? 'book' : 'list')}</div>
+    <div class="tx"><b>${esc(l.title)}</b><span>${esc(l.type)}<em>${ico('img')}${l.images.length}</em>${now - new Date(l.date) < 2592e5 ? '<i class="new">جديد</i>' : ''}</span></div>${ico('back')}</div>`).join('')
+    : `<div class="empty">${S.lessons.length ? 'لا نتائج مطابقة.' : 'لم يرفع الأستاذ أي محتوى بعد.'}</div>`;
+}
+function openLesson(id) {
+  const l = S.lessons.find(x => x.id === id);
+  $('vt').textContent = l.title; $('vs').textContent = `${l.type} - ${S.t.subject} - ${S.t.year}`;
+  $('vi').innerHTML = l.images.map(i => `<img src="${img(i)}" alt="${esc(l.title)}" loading="lazy" onclick="zoom(this.src)">`).join('');
+  $('vprint').innerHTML = l.images.map(i => `<img src="${img(i)}" alt="">`).join('');
+  api('view', { code: S.code, lessonId: id }, true).catch(() => {}); go('view');
+}
+function zoom(src) { $('zi').src = src; $('zoom').classList.add('on'); }
+
+/* ---------- بدء التشغيل ---------- */
+$('sn').value = localStorage.getItem('sname') || ''; renderFol();
+['le', 'lp'].forEach(i => $(i).addEventListener('keydown', e => e.key === 'Enter' && login()));
+$('sc').addEventListener('keydown', e => e.key === 'Enter' && studentOpen());
+const qc = new URLSearchParams(location.search).get('c');
+if (qc) { $('sc').value = qc; S.via = 'link'; S.stack = ['role']; show('scode'); }
+else if (S.tok && !API_URL.startsWith('PASTE')) loadMe().catch(() => { localStorage.removeItem('tok'); S.tok = null; });
+</script>
+</body>
+</html>
