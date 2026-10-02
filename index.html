@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1E1A4D">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="دروسي"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>دروسي - منصة الدروس والتمارين</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%234F3FD8'/%3E%3Cpath d='M32 24C26 20 18 20 12 22v22c6-2 14-2 20 2zM32 24c6-4 14-4 20-2v22c-6-2-14-2-20 2z' fill='%23fff'/%3E%3Cpath d='M32 6l2 5 5 1.500-5 1.500-2 5-2-5-5-1.500 5-1.500z' fill='%23FFB020'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -111,6 +115,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:14px;font-size:14px;z-index:20;display:none;max-width:90%;box-shadow:var(--sh)}.toast.err{background:var(--err)}.toast.on{display:block}
 .ld{position:fixed;inset:0;background:rgba(245,244,251,.6);display:none;place-items:center;z-index:15}.ld.on{display:grid}
 .ld i{width:46px;height:46px;border:5px solid var(--line);border-top-color:var(--pri2);border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.pdf{margin-bottom:14px;text-align:center}.pdf iframe{width:100%;height:72vh;border:1px solid var(--line);border-radius:16px;background:#fff;margin-bottom:8px}.pdf .btn{margin:0 auto}
 .tab{display:none}.tab.on{display:block}
 #vprint{display:none}@media print{body>*,.app{display:none!important}#vprint{display:block!important}#vprint img{width:100%;page-break-inside:avoid;margin-bottom:10px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -150,6 +155,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
 <symbol id="share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></symbol>
 <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
 <symbol id="spark" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></symbol>
+<symbol id="pdf" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
 <symbol id="print2" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H3v-8h18v8h-3M7 14h10v7H7z"/></symbol>
 </defs></svg>
 
@@ -169,6 +175,9 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
   <h2>من أنت؟</h2><p class="sub">اختر فضاءك للمتابعة</p>
   <button class="role" onclick="go('tauth')"><div class="ic"><svg class="i"><use href="#teacher"/></svg></div><div><b>أستاذ</b><span>ارفع الدروس وتابع من دخل لفضائك</span></div><svg class="i"><use href="#back"/></svg></button>
   <button class="role s" onclick="go('scode')"><div class="ic"><svg class="i"><use href="#cap"/></svg></div><div><b>تلميذ</b><span>ادخل بكود أستاذك أو برابطه</span></div><svg class="i"><use href="#back"/></svg></button>
+  <div class="card" id="inst" style="display:none;align-items:center;gap:12px"><svg class="mark" style="width:46px;height:46px"><use href="#logo"/></svg>
+    <div style="flex:1"><b>ثبّت دروسي على هاتفك</b><div class="sub" id="instT" style="margin:2px 0 0">تفتح كتطبيق كامل وتعمل عند ضعف الإنترنت</div></div>
+    <button class="btn sm" id="instB" onclick="installApp()">تثبيت</button></div>
 </section>
 
 <section id="tauth">
@@ -210,7 +219,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
 
 <section id="view" class="vw">
   <h2 id="vt"></h2><p class="sub" id="vs"></p>
-  <button class="btn" style="margin-bottom:14px" onclick="window.print()"><svg class="i"><use href="#print"/></svg>طباعة</button>
+  <div id="vbar" style="margin-bottom:14px"></div>
   <div id="vi"></div>
 </section>
 
@@ -240,6 +249,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
   <div class="tab" id="p3">
     <h2>حسابي</h2><p class="sub">معلوماتك وكود الطالب</p>
     <div class="card" id="acc"></div>
+    <div class="card" id="spc" style="margin-top:14px"></div>
     <button class="btn ghost" style="margin-top:14px" onclick="logout()"><svg class="i"><use href="#out"/></svg>تسجيل الخروج</button>
   </div>
 </section>
@@ -257,7 +267,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
   <h2 id="ftt" style="font-size:20px">رفع جديد</h2>
   <label>العنوان</label><div class="f"><svg class="i"><use href="#book"/></svg><input id="lt"></div>
   <label>نوع المحتوى</label><div class="f"><svg class="i"><use href="#list"/></svg><select id="ltp"><option>درس</option><option>سلسلة تمارين</option></select></div>
-  <label>صور المحتوى</label><input id="li" type="file" accept="image/*" multiple onchange="pick(this)">
+  <label>صور أو ملف PDF</label><input id="li" type="file" accept="image/*,application/pdf" multiple onchange="pick(this)">
   <div class="thumbs" id="tb"></div>
   <button class="btn" style="margin-top:20px" onclick="saveLesson()"><svg class="i"><use href="#up"/></svg><span id="svt">رفع</span></button>
   <button class="btn ghost" style="margin-top:10px" onclick="closeEd()">إلغاء</button>
@@ -269,7 +279,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
 
 <script>
 /* ضع هنا رابط تطبيق الويب بعد نشر Code.gs */
-const API_URL = "https://script.google.com/macros/s/AKfycbxjGWWN4xoazTHxjKo7v3guSSNWf10eaToW6UGFil0ciKTFvh2LeNkE6adR5RyKTbVe/exec";
+const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -301,7 +311,7 @@ async function api(action, data = {}, quiet) {
     const j = await r.json();
     if (!j.ok) throw new Error(j.error);
     return j.data;
-  } catch (e) { if (!quiet) toast(e.message === 'Failed to fetch' ? 'تعذر الاتصال بالخادم' : e.message, true); throw e; }
+  } catch (e) { if (!quiet) toast(e.message === 'Failed to fetch' ? 'تعذر الاتصال بالخادم' : e.message, true); if (String(e.message).includes('الجلسة')) logout(); throw e; }
   finally { $('ld').classList.remove('on'); }
 }
 const ago = t => { const m = Math.max(0, (Date.now() - t) / 6e4); return m < 1 ? 'الآن' : m < 60 ? `منذ ${Math.floor(m)} د` : m < 1440 ? `منذ ${Math.floor(m / 60)} سا` : `منذ ${Math.floor(m / 1440)} يوم`; };
@@ -365,7 +375,22 @@ function renderTeacher() {
   $('acc').innerHTML = [['user', `${m.name} ${m.surname}`], ['sub', m.subject], ['cal', m.year], ['mail', m.email], ['phone', m.phone]]
     .map(([i, t]) => `<div class="sd"><div class="a">${ico(i)}</div><div><b>${esc(t)}</b></div></div>`).join('')
     + `<div class="sd"><div class="a">${ico('key')}</div><div><b dir="ltr" style="text-align:right">${esc(m.code)}</b><span>كود الطالب</span></div><button class="go" onclick="copyCode()" aria-label="نسخ">${ico('copy')}</button></div>`;
-  renderT();
+  renderSpace(); renderT();
+}
+function renderSpace() {
+  const o = S.me.open !== false;
+  $('spc').innerHTML = `<div class="sd" style="border:0"><div class="a" style="${o ? 'background:#DFF7F1;color:#0E9F86' : 'background:#FDE6EA;color:var(--err)'}">${ico(o ? 'eye' : 'lock')}</div><div><b>${o ? 'فضاؤك مفتوح' : 'فضاؤك مغلق'}</b><span>${o ? 'يدخله من يملك الكود أو الرابط' : 'لا يستطيع أحد الدخول حاليا'}</span></div></div>
+  <div class="share"><button class="btn sm ghost" onclick="toggleSpace()">${ico(o ? 'lock' : 'eye')}${o ? 'إغلاق الفضاء مؤقتا' : 'إعادة فتح الفضاء'}</button><button class="btn sm ghost" onclick="newCode()">${ico('key')}تغيير الكود</button></div>`;
+}
+async function toggleSpace() {
+  const o = S.me.open !== false;
+  if (o && !confirm('سيمنع هذا دخول التلاميذ حتى تعيد فتح الفضاء. متابعة؟')) return;
+  S.me = await api('setOpen', { open: !o }); renderTeacher(); toast(o ? 'تم إغلاق الفضاء' : 'تم فتح الفضاء');
+}
+async function newCode() {
+  const c = prompt('اكتب الكود الجديد، أو اتركه فارغا لإنشاء كود عشوائي.\nتنبيه: الكود والرابط القديمان سيتوقفان فورا.');
+  if (c === null) return;
+  S.me = await api('rotateCode', { code: c }); renderTeacher(); toast('تم تغيير الكود');
 }
 async function loadStats() {
   try { S.st = await api('stats', {}, true); } catch (e) { return; }
@@ -383,16 +408,27 @@ function renderT() {
   const L = filt('t', $('tq').value), V = S.st?.views || {};
   $('tl2').innerHTML = L.length ? L.map(l => `
     <div class="ls ${l.type === 'درس' ? '' : 'ex'}"><div class="ic">${ico(l.type === 'درس' ? 'book' : 'list')}</div>
-    <div class="tx"><b>${esc(l.title)}</b><span>${esc(l.type)}<em>${ico('img')}${l.images.length}</em><em>${ico('eye')}${V[l.id] || 0}</em></span></div>
+    <div class="tx"><b>${esc(l.title)}</b><span>${esc(l.type)}<em>${ico('img')}${l.images.length}</em>${l.images.some(isPdf) ? `<em>${ico('pdf')}PDF</em>` : ''}<em>${ico('eye')}${V[l.id] || 0}</em></span></div>
     <button class="go" onclick="editLesson('${l.id}')" aria-label="تعديل">${ico('edit')}</button>
     <button class="go d" onclick="delLesson('${l.id}')" aria-label="حذف">${ico('trash')}</button></div>`).join('')
     : `<div class="empty">${S.lessons.length ? 'لا نتائج مطابقة.' : 'لم ترفع أي محتوى بعد. اضغط زر الإضافة للبدء.'}</div>`;
 }
+const isPdf = id => String(id).startsWith('pdf:');
 function drawThumbs() {
-  const b = (cls, src, arr, i) => `<div class="th"><img src="${src}" alt=""><button onclick="S.${arr}.splice(${i},1);drawThumbs()" aria-label="حذف الصورة">${ico('x')}</button></div>`;
-  $('tb').innerHTML = S.keep.map((id, i) => b('', img(id, 200), 'keep', i)).join('') + S.fresh.map((x, i) => b('', x, 'fresh', i)).join('');
+  const b = (inner, arr, i) => `<div class="th">${inner}<button onclick="S.${arr}.splice(${i},1);drawThumbs()" aria-label="حذف">${ico('x')}</button></div>`;
+  const pdf = `<div style="display:grid;place-items:center;height:100%;background:var(--tint);color:var(--pri);font-size:11px;font-weight:700">${ico('pdf')}PDF</div>`;
+  $('tb').innerHTML = S.keep.map((id, i) => b(isPdf(id) ? pdf : `<img src="${img(id, 200)}" alt="">`, 'keep', i)).join('')
+    + S.fresh.map((x, i) => b(x.pdf ? pdf : `<img src="${x.d}" alt="">`, 'fresh', i)).join('');
 }
-async function pick(inp) { for (const f of inp.files) S.fresh.push(await shrink(f)); inp.value = ''; drawThumbs(); }
+async function pick(inp) {
+  for (const f of inp.files) {
+    if (f.type === 'application/pdf') {
+      if (f.size > 15e6) { toast('ملف PDF كبير، الحد 15 ميغابايت', true); continue; }
+      S.fresh.push({ pdf: 1, d: await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(f); }) });
+    } else S.fresh.push({ d: await shrink(f) });
+  }
+  inp.value = ''; drawThumbs();
+}
 function openEd(id) {
   const l = id && S.lessons.find(x => x.id === id);
   S.editId = id || null; S.keep = l ? [...l.images] : []; S.fresh = [];
@@ -405,7 +441,7 @@ async function saveLesson() {
   if (!$('lt').value.trim()) return toast('عنوان الدرس مطلوب', true);
   if (!S.keep.length && !S.fresh.length) return toast('أضف صورة واحدة على الأقل', true);
   const edit = !!S.editId;
-  S.lessons = await api('saveLesson', { id: S.editId, title: $('lt').value, type: $('ltp').value, keep: S.keep, newImages: S.fresh });
+  S.lessons = await api('saveLesson', { id: S.editId, title: $('lt').value, type: $('ltp').value, keep: S.keep, newImages: S.fresh.map(x => x.d) });
   closeEd(); renderT(); loadStats(); toast(edit ? 'تم حفظ التعديلات' : 'تم الرفع');
 }
 async function delLesson(id) {
@@ -438,10 +474,13 @@ function renderS() {
     : `<div class="empty">${S.lessons.length ? 'لا نتائج مطابقة.' : 'لم يرفع الأستاذ أي محتوى بعد.'}</div>`;
 }
 function openLesson(id) {
-  const l = S.lessons.find(x => x.id === id);
+  const l = S.lessons.find(x => x.id === id), im = l.images.filter(x => !isPdf(x));
   $('vt').textContent = l.title; $('vs').textContent = `${l.type} - ${S.t.subject} - ${S.t.year}`;
-  $('vi').innerHTML = l.images.map(i => `<img src="${img(i)}" alt="${esc(l.title)}" loading="lazy" onclick="zoom(this.src)">`).join('');
-  $('vprint').innerHTML = l.images.map(i => `<img src="${img(i)}" alt="">`).join('');
+  $('vbar').innerHTML = im.length ? `<button class="btn" onclick="window.print()">${ico('print')}طباعة الصور</button>` : '';
+  $('vi').innerHTML = l.images.map(x => isPdf(x)
+    ? `<div class="pdf"><iframe src="https://drive.google.com/file/d/${x.slice(4)}/preview" title="${esc(l.title)}" loading="lazy"></iframe><a class="btn sm ghost" target="_blank" rel="noopener" href="https://drive.google.com/file/d/${x.slice(4)}/view">${ico('print')}فتح وطباعة PDF</a></div>`
+    : `<img src="${img(x)}" alt="${esc(l.title)}" loading="lazy" onclick="zoom(this.src)">`).join('');
+  $('vprint').innerHTML = im.map(i => `<img src="${img(i)}" alt="">`).join('');
   api('view', { code: S.code, lessonId: id }, true).catch(() => {}); go('view');
 }
 function zoom(src) { $('zi').src = src; $('zoom').classList.add('on'); }
@@ -452,7 +491,16 @@ $('sn').value = localStorage.getItem('sname') || ''; renderFol();
 $('sc').addEventListener('keydown', e => e.key === 'Enter' && studentOpen());
 const qc = new URLSearchParams(location.search).get('c');
 if (qc) { $('sc').value = qc; S.via = 'link'; S.stack = ['role']; show('scode'); }
-else if (S.tok && !API_URL.startsWith('PASTE')) loadMe().catch(() => { localStorage.removeItem('tok'); S.tok = null; });
+else if (S.tok && !API_URL.startsWith('PASTE')) loadMe().catch(() => {});
+
+/* ---------- تثبيت التطبيق (PWA) ---------- */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+let dip; const ios = /iphone|ipad|ipod/i.test(navigator.userAgent), standalone = matchMedia('(display-mode:standalone)').matches || navigator.standalone;
+const showInst = () => $('inst').style.display = 'flex';
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); dip = e; if (!standalone) showInst(); });
+if (ios && !standalone) { $('instT').textContent = 'في سفاري اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"'; $('instB').style.display = 'none'; showInst(); }
+async function installApp() { if (!dip) return; dip.prompt(); await dip.userChoice; dip = null; $('inst').style.display = 'none'; }
+addEventListener('appinstalled', () => $('inst').style.display = 'none');
 </script>
 </body>
 </html>
