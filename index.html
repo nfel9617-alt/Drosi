@@ -253,6 +253,28 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
     <button class="btn ghost" style="margin-top:14px" onclick="logout()"><svg class="i"><use href="#out"/></svg>تسجيل الخروج</button>
   </div>
 </section>
+
+<section id="adm">
+  <div id="aLogin">
+    <h2>لوحة الإدارة</h2><p class="sub">دخول المسؤول فقط</p>
+    <label>كلمة مرور المدير</label><div class="f"><svg class="i"><use href="#lock"/></svg><input id="ap" type="password" autocomplete="current-password"></div>
+    <button class="btn" style="margin-top:22px" onclick="adminLogin()"><svg class="i"><use href="#out"/></svg>دخول</button>
+  </div>
+  <div id="aDash" style="display:none">
+    <div class="hero"><b style="font-size:19px">لوحة إدارة دروسي</b><div class="big"><strong id="a_t">0</strong><span>أستاذ مسجل</span></div></div>
+    <div class="stats" id="aK"></div>
+    <div class="card"><h3>التسجيلات الجديدة (14 يوما)</h3><div class="chart" id="c1"></div></div>
+    <div class="card" style="margin-top:12px"><h3>دخول الطلبة (14 يوما)</h3><div class="chart" id="c2"></div></div>
+    <div class="card" style="margin-top:12px"><h3>نشاط الأساتذة: دخول للمنصة (14 يوما)</h3><div class="chart" id="c3"></div></div>
+    <div class="hd"><h3>ما يستحق انتباهك</h3></div><div class="card" id="aI" style="padding:4px 16px"></div>
+    <div class="hd"><h3>التوزيع</h3></div><div class="card" id="aD"></div>
+    <div class="hd"><h3>الأساتذة</h3></div>
+    <div class="sb f"><svg class="i"><use href="#search"/></svg><input id="aq" placeholder="ابحث بالاسم أو المادة أو الهاتف" oninput="renderAL()"></div>
+    <div class="chips" data-m="a"><button class="on" data-f="">الكل</button><button data-f="new">جدد</button><button data-f="idle">غير نشطين</button><button data-f="noup">لم يرفعوا شيئا</button><button data-f="off">مغلقون</button></div>
+    <div id="aL"></div>
+    <div class="share"><button class="btn sm ghost" onclick="aLoad()">تحديث</button><button class="btn sm ghost" onclick="exportCsv()"><svg class="i"><use href="#share"/></svg>تصدير Excel</button><button class="btn sm ghost" onclick="adminOut()"><svg class="i"><use href="#out"/></svg>خروج</button></div>
+  </div>
+</section>
 </div>
 
 <nav class="nav" id="nav">
@@ -272,6 +294,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
   <button class="btn" style="margin-top:20px" onclick="saveLesson()"><svg class="i"><use href="#up"/></svg><span id="svt">رفع</span></button>
   <button class="btn ghost" style="margin-top:10px" onclick="closeEd()">إلغاء</button>
 </div></div>
+<div class="ov" id="ad" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" id="adb"></div></div>
 <div class="ov" id="qm" onclick="this.classList.remove('on')"><div class="sheet" style="text-align:center"><h2 style="font-size:20px">امسح للدخول لفضائي</h2><div class="qr" id="qrb"></div><p class="sub">اعرض الرمز على السبورة ليدخل التلاميذ مباشرة</p></div></div>
 <div id="zoom" onclick="this.classList.remove('on')"><img id="zi" alt=""></div>
 <div id="vprint"></div>
@@ -279,7 +302,7 @@ input[type=file]{padding:11px;font-size:14px}input:focus,select:focus{border-col
 
 <script>
 /* ضع هنا رابط تطبيق الويب بعد نشر Code.gs */
-const API_URL = "https://script.google.com/macros/s/AKfycbyxkcN6dhJ0kQP44bbWnZYM4_Bp099A3fSifVBLHO9zUqKwOwDpwLsHDbMoJu1Ry8MH/exec";
+const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -289,6 +312,7 @@ const ls = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } 
 const YEARS = ['1 متوسط','2 متوسط','3 متوسط','4 متوسط','1 ثانوي','2 ثانوي','3 ثانوي','جامعي'];
 $('ry').innerHTML = YEARS.map(y => `<option>${y}</option>`).join('');
 const DID = localStorage.getItem('did') || (localStorage.setItem('did', Math.random().toString(36).slice(2) + Date.now().toString(36)), localStorage.getItem('did'));
+const A = { tok: localStorage.getItem('atok'), d: null };
 const S = { tok: localStorage.getItem('tok'), lessons: [], keep: [], fresh: [], editId: null, stack: [], f: { t: '', s: '' }, st: null, code: '', via: '' };
 
 /* ---------- التنقل ---------- */
@@ -296,7 +320,7 @@ function show(id) {
   document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
   const t = id === 'thome';
   $('hdr').style.display = id === 'splash' ? 'none' : 'flex';
-  $('hb').style.visibility = ['role', 'thome'].includes(id) ? 'hidden' : 'visible';
+  $('hb').style.visibility = ['role', 'thome', 'adm'].includes(id) ? 'hidden' : 'visible';
   $('nav').classList.toggle('on', t); $('fab').classList.toggle('on', t);
   window.scrollTo(0, 0);
 }
@@ -311,14 +335,14 @@ async function api(action, data = {}, quiet) {
     const j = await r.json();
     if (!j.ok) throw new Error(j.error);
     return j.data;
-  } catch (e) { if (!quiet) toast(e.message === 'Failed to fetch' ? 'تعذر الاتصال بالخادم' : e.message, true); if (String(e.message).includes('الجلسة')) logout(); throw e; }
+  } catch (e) { if (!quiet) toast(e.message === 'Failed to fetch' ? 'تعذر الاتصال بالخادم' : e.message, true); if (String(e.message).includes('الجلسة')) (data.token && data.token === A.tok ? adminOut() : logout()); throw e; }
   finally { $('ld').classList.remove('on'); }
 }
 const ago = t => { const m = Math.max(0, (Date.now() - t) / 6e4); return m < 1 ? 'الآن' : m < 60 ? `منذ ${Math.floor(m)} د` : m < 1440 ? `منذ ${Math.floor(m / 60)} سا` : `منذ ${Math.floor(m / 1440)} يوم`; };
 document.addEventListener('click', e => {
   const b = e.target.closest('.chips button'); if (!b) return;
   const m = b.parentNode.dataset.m; S.f[m] = b.dataset.f;
-  b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); m === 't' ? renderT() : renderS();
+  b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); m === 't' ? renderT() : m === 'a' ? renderAL() : renderS();
 });
 const filt = (m, q) => S.lessons.filter(l => (!S.f[m] || l.type === S.f[m]) && l.title.includes(q.trim()));
 
@@ -485,12 +509,72 @@ function openLesson(id) {
 }
 function zoom(src) { $('zi').src = src; $('zoom').classList.add('on'); }
 
+/* ---------- لوحة الإدارة ---------- */
+async function adminLogin() {
+  const r = await api('adminLogin', { pass: $('ap').value });
+  A.tok = r.token; localStorage.setItem('atok', A.tok); $('ap').value = ''; await aLoad();
+}
+function adminOut() { localStorage.removeItem('atok'); A.tok = null; $('aLogin').style.display = ''; $('aDash').style.display = 'none'; show('adm'); }
+async function aLoad() {
+  A.d = await api('adminStats', { token: A.tok });
+  $('aLogin').style.display = 'none'; $('aDash').style.display = ''; renderAdmin(); show('adm');
+}
+function renderAdmin() {
+  const d = A.d, t = d.totals, T = d.teachers, now = Date.now(), W = 7 * 864e5;
+  $('a_t').textContent = t.teachers;
+  $('aK').innerHTML = [['users', t.new7, 'جدد (7 أيام)'], ['spark', t.active7, 'نشطون (7 أيام)'], ['cap', t.students, 'طلبة دخلوا'], ['book', t.lessons, 'دروس مرفوعة'], ['img', t.files, 'ملفات (' + t.pdfs + ' PDF)'], ['eye', t.enters7, 'دخول طلبة (7 أيام)']]
+    .map(([i, n, l]) => `<div class="st">${ico(i)}<b>${n}</b><span>${l}</span></div>`).join('');
+  const bars = (id, a) => { const mx = Math.max(1, ...a); $(id).style.gap = '4px';
+    $(id).innerHTML = a.map((n, i) => `<div class="${i === a.length - 1 ? 'now' : ''}"><b style="font-size:10px;color:var(--tx)">${n || ''}</b><i style="height:${Math.max(4, n / mx * 80)}px"></i>${new Date(now - (a.length - 1 - i) * 864e5).getDate()}</div>`).join(''); };
+  bars('c1', d.series.reg); bars('c2', d.series.enters); bars('c3', d.series.act);
+  const noUp = T.filter(x => !x.lessons).length, noSt = T.filter(x => x.lessons && !x.students).length, idle = T.filter(x => now - x.last > W).length, off = T.filter(x => !x.open).length;
+  $('aI').innerHTML = [[noUp, 'سجلوا ولم يرفعوا أي درس', 'ساعدهم في رفع أول درس'], [noSt, 'رفعوا دروسا ولم يدخل عندهم طالب', 'ذكّرهم بمشاركة الرابط أو الكود'], [idle, 'لم يدخلوا منذ أكثر من 7 أيام', 'خطر التوقف، تواصل معهم'], [off, 'فضاءات مغلقة', '']]
+    .map(([n, a, b]) => `<div class="sd"><div class="a">${n}</div><div><b>${a}</b><span>${b}</span></div></div>`).join('');
+  const dist = (ti, o) => { const e = Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, 8), m = e[0] ? e[0][1] : 1;
+    return `<h3 style="margin:10px 0 8px;font-size:15px">${ti}</h3>` + e.map(([k, n]) => `<div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(k)}</span><b>${n}</b></div><div class="bar2" style="margin:2px 0 8px"><i style="width:${n / m * 100}%"></i></div>`).join(''); };
+  $('aD').innerHTML = dist('المواد', d.subjects) + dist('السنوات الدراسية', d.years) + dist('نوع المحتوى', d.types);
+  renderAL();
+}
+function renderAL() {
+  const q = $('aq').value.trim(), f = S.f.a || '', now = Date.now(), W = 7 * 864e5;
+  const L = A.d.teachers.filter(x => (!q || (x.name + x.subject + x.email + x.phone).includes(q)) &&
+    (!f || (f === 'new' ? now - x.created < W : f === 'idle' ? now - x.last > W : f === 'noup' ? !x.lessons : !x.open)));
+  $('aL').innerHTML = L.length ? L.map(x => `<div class="ls click ${x.open ? '' : 'ex'}" tabindex="0" onclick="adminDetail('${x.id}')"><div class="ic">${ico('teacher')}</div>
+    <div class="tx"><b>${esc(x.name)}</b><span>${esc(x.subject)} - ${esc(x.year)}</span>
+    <span><em>${ico('clock')}سجل ${ago(x.created)}</em><em>${ico('out')}آخر نشاط ${ago(x.last)}</em></span>
+    <span><em>${ico('book')}${x.lessons}</em><em>${ico('img')}${x.files}</em><em>${ico('users')}${x.students}</em><em>${ico('eye')}${x.logins} دخول</em></span></div>${ico('back')}</div>`).join('')
+    : '<div class="empty">لا نتائج.</div>';
+}
+async function adminDetail(id) {
+  const x = A.d.teachers.find(t => t.id === id), r = await api('adminTeacher', { token: A.tok, id });
+  const ph = x.phone.replace(/\D/g, ''), w = ph.startsWith('0') ? '213' + ph.slice(1) : ph, dt = t => new Date(t).toLocaleDateString('ar-DZ');
+  $('adb').innerHTML = `<h2 style="font-size:20px">${esc(x.name)}</h2><p class="sub">${esc(x.subject)} - ${esc(x.year)} - ${x.open ? 'فضاء مفتوح' : 'فضاء مغلق'}</p>
+  <div class="share" style="margin:0 0 12px"><a class="btn sm ghost" href="tel:${esc(ph)}">${ico('phone')}اتصال</a><a class="btn sm mint" target="_blank" rel="noopener" href="https://wa.me/${w}">${ico('share')}واتساب</a><a class="btn sm ghost" href="mailto:${esc(x.email)}">${ico('mail')}بريد</a></div>
+  <div class="card" style="padding:4px 16px">${[['mail', x.email], ['phone', x.phone], ['key', 'الكود: ' + x.code], ['cal', 'سجل في ' + dt(x.created)], ['clock', 'آخر نشاط ' + ago(x.last)], ['eye', x.logins + ' مرة دخول للمنصة']]
+    .map(([i, t]) => `<div class="sd"><div class="a">${ico(i)}</div><div><b dir="auto">${esc(t)}</b></div></div>`).join('')}</div>
+  <div class="hd"><h3>ما رفعه (${r.lessons.length})</h3></div>${r.lessons.length ? r.lessons.map(l => `<div class="ls ${l.type === 'درس' ? '' : 'ex'}"><div class="ic">${ico(l.type === 'درس' ? 'book' : 'list')}</div><div class="tx"><b>${esc(l.title)}</b><span>${esc(l.type)}<em>${ico('img')}${l.files}</em>${l.pdfs ? `<em>${ico('pdf')}${l.pdfs}</em>` : ''}<em>${ico('eye')}${l.views}</em><em>${dt(l.date)}</em></span></div></div>`).join('') : '<div class="empty">لم يرفع شيئا بعد.</div>'}
+  <div class="hd"><h3>طلبته (${x.students})</h3></div><div class="card" style="padding:4px 16px">${r.students.length ? r.students.map(s => `<div class="sd"><div class="a">${esc(s.name[0])}</div><div><b>${esc(s.name)}</b><span>آخر دخول ${ago(s.last)}</span></div><em>${s.visits}</em></div>`).join('') : '<div class="empty" style="border:0">لا طلبة بعد.</div>'}</div>
+  <button class="btn ghost" style="margin-top:16px" onclick="adminToggle('${x.id}',${!x.open})">${ico(x.open ? 'lock' : 'eye')}${x.open ? 'إيقاف فضاء الأستاذ' : 'إعادة تفعيل الفضاء'}</button>`;
+  $('ad').classList.add('on');
+}
+async function adminToggle(id, open) {
+  await api('adminSetOpen', { token: A.tok, id, open }); $('ad').classList.remove('on'); await aLoad(); toast(open ? 'تم التفعيل' : 'تم الإيقاف');
+}
+function exportCsv() {
+  const f = t => t ? new Date(t).toLocaleDateString('fr-CA') : '';
+  const rows = [['الاسم', 'المادة', 'السنة', 'البريد', 'الهاتف', 'الكود', 'تاريخ التسجيل', 'آخر نشاط', 'عدد الدخول', 'الدروس', 'الملفات', 'الطلبة', 'الحالة']]
+    .concat(A.d.teachers.map(x => [x.name, x.subject, x.year, x.email, x.phone, x.code, f(x.created), f(x.last), x.logins, x.lessons, x.files, x.students, x.open ? 'مفتوح' : 'مغلق']));
+  const csv = '\ufeff' + rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'darsi-teachers.csv'; a.click();
+}
+
 /* ---------- بدء التشغيل ---------- */
 $('sn').value = localStorage.getItem('sname') || ''; renderFol();
 ['le', 'lp'].forEach(i => $(i).addEventListener('keydown', e => e.key === 'Enter' && login()));
 $('sc').addEventListener('keydown', e => e.key === 'Enter' && studentOpen());
 const qc = new URLSearchParams(location.search).get('c');
-if (qc) { $('sc').value = qc; S.via = 'link'; S.stack = ['role']; show('scode'); }
+if (new URLSearchParams(location.search).has('admin')) { S.stack = []; show('adm'); if (A.tok) aLoad().catch(() => {}); }
+else if (qc) { $('sc').value = qc; S.via = 'link'; S.stack = ['role']; show('scode'); }
 else if (S.tok && !API_URL.startsWith('PASTE')) loadMe().catch(() => {});
 
 /* ---------- تثبيت التطبيق (PWA) ---------- */
